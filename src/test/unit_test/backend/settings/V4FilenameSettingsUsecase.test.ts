@@ -1,3 +1,4 @@
+import { PatternToken } from '@backend/enums'
 import V4FilenameSettingsUsecase, {
   type FileInfo,
 } from '@backend/settings/filenameSettings/usecase'
@@ -21,8 +22,8 @@ describe('Filename usecase unit test', () => {
   const settings: () => V4FilenameSettings = () => ({
     directory: 'dir',
     noSubDirectory: false,
-    filenamePattern: ['{account}', '{tweetId}', '{serial}'],
-    groupBy: '{account}',
+    filenamePattern: [PatternToken.Account, PatternToken.TweetId, PatternToken.Serial],
+    groupBy: PatternToken.Account,
     fileAggregation: false,
   })
 
@@ -35,7 +36,7 @@ describe('Filename usecase unit test', () => {
 
   it('can make file name with account', () => {
     const s = settings()
-    s.filenamePattern = ['{account}']
+    s.filenamePattern = [PatternToken.Account]
     const usecase = new V4FilenameSettingsUsecase(s)
     const filename = usecase.makeFilename(tweetDetail, fileInfo)
     expect(filename).toBe(tweetDetail.screenName)
@@ -43,7 +44,7 @@ describe('Filename usecase unit test', () => {
 
   it('can make file name with tweetId', () => {
     const s = settings()
-    s.filenamePattern = ['{tweetId}']
+    s.filenamePattern = [PatternToken.TweetId]
     const usecase = new V4FilenameSettingsUsecase(s)
     const filename = usecase.makeFilename(tweetDetail, fileInfo)
     expect(filename).toBe(tweetDetail.id)
@@ -51,7 +52,7 @@ describe('Filename usecase unit test', () => {
 
   it('can make file name with serial', () => {
     const s = settings()
-    s.filenamePattern = ['{serial}']
+    s.filenamePattern = [PatternToken.Serial]
     const usecase = new V4FilenameSettingsUsecase(s)
     const filename = usecase.makeFilename(tweetDetail, fileInfo)
     expect(filename).toBe(String(fileInfo.serial).padStart(2, '0'))
@@ -59,7 +60,7 @@ describe('Filename usecase unit test', () => {
 
   it('can make file name with hash', () => {
     const s = settings()
-    s.filenamePattern = ['{hash}']
+    s.filenamePattern = [PatternToken.Hash]
     const usecase = new V4FilenameSettingsUsecase(s)
     const filename = usecase.makeFilename(tweetDetail, fileInfo)
     expect(filename).toBe(fileInfo.hash)
@@ -67,7 +68,7 @@ describe('Filename usecase unit test', () => {
 
   it('can make file name with date', () => {
     const s = settings()
-    s.filenamePattern = ['{date}']
+    s.filenamePattern = [PatternToken.Date]
     const usecase = new V4FilenameSettingsUsecase(s)
     const filename = usecase.makeFilename(tweetDetail, fileInfo)
     expect(filename).toBe('22220302')
@@ -77,7 +78,7 @@ describe('Filename usecase unit test', () => {
     const s: V4FilenameSettings = {
       ...settings(),
       fileAggregation: true,
-      groupBy: '{account}',
+      groupBy: PatternToken.Account,
     }
     const useCase = new V4FilenameSettingsUsecase(s)
     const aggregationDir = useCase.makeAggregationDirectory(tweetDetail)

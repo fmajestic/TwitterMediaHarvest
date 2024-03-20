@@ -1,12 +1,8 @@
 import { v4FilenameSettingsRepo } from '@backend/configurations'
+import { PatternToken } from '@backend/enums'
 import type { HelperMessage } from '@pages/components/controls/featureControls'
 import { i18n } from '@pages/utils'
-import type {
-  AggregationToken,
-  FilenamePatternToken,
-  V4FilenamePattern,
-  V4FilenameSettings,
-} from '@schema'
+import type { AggregationToken, V4FilenamePattern, V4FilenameSettings } from '@schema'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import sanitize from 'sanitize-filename'
 
@@ -144,7 +140,8 @@ const validDir = (dir: string) =>
   dir.length <= 512
 
 const validPattern = (p: V4FilenamePattern) =>
-  p.includes('{hash}') || (p.includes('{tweetId}') && p.includes('{serial}'))
+  p.includes(PatternToken.Hash) ||
+  (p.includes(PatternToken.TweetId) && p.includes(PatternToken.Serial))
 
 type FormMessage = {
   directory: HelperMessage | null
@@ -156,7 +153,7 @@ type FormHandler = {
   reset: () => void
   directoryInput: (e: React.ChangeEvent<HTMLInputElement>) => void
   directorySwitch: () => void
-  patternTokenToggle: (t: FilenamePatternToken, s: boolean) => void
+  patternTokenToggle: (t: PatternToken, s: boolean) => void
   patternTokenSort: (sourceIndex: number, destinationIndex: number) => void
   handleAggregationTokenChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
   aggregationToggle: () => void
@@ -236,7 +233,7 @@ const useFilenameSettingsForm = (): [
   }, [settingsDispatch])
 
   const handleTokenToggle = useCallback(
-    (t: FilenamePatternToken, state: boolean) => {
+    (t: PatternToken, state: boolean) => {
       const newPattern = state
         ? [...filenameSettings.filenamePattern, t]
         : [...filenameSettings.filenamePattern].filter(v => v !== t)

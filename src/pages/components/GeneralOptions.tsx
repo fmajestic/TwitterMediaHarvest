@@ -1,6 +1,10 @@
 import { RichFeatureSwitch } from './controls/featureControls'
-import { PatternToken, SortablePatternToken } from './controls/filenameControls'
+import {
+  PatternToken as PatternTokenControl,
+  SortablePatternToken,
+} from './controls/filenameControls'
 import { DEFAULT_DIRECTORY } from '@backend/constants'
+import { PatternToken } from '@backend/enums'
 import V4FilenameSettingsUsecase from '@backend/settings/filenameSettings/usecase'
 import { Button, Flex, HStack, Input, Select, VStack } from '@chakra-ui/react'
 import {
@@ -15,26 +19,29 @@ import { SortableContext, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import useDownloadSettings from '@pages/hooks/useDownloadSettings'
 import useFilenameSettingsForm from '@pages/hooks/useFilenameSettingsForm'
 import { i18n } from '@pages/utils'
-import type { FilenamePatternToken, V4FilenamePattern } from '@schema'
+import type { V4FilenamePattern } from '@schema'
 import React, { memo } from 'react'
 
 type TokenPanelProps = {
-  handleTokenToggle: (token: FilenamePatternToken, state: boolean) => void
+  handleTokenToggle: (token: PatternToken, state: boolean) => void
   handleTokenSort: (sourceIndex: number, destinationIndex: number) => void
   pattern: V4FilenamePattern
   previewFilename: string
 }
 
-const fp: [string, FilenamePatternToken][] = [
-  [i18n('options_general_filenamePattern_token_account'), '{account}'],
-  [i18n('options_general_filenamePattern_token_accountId'), '{accountId}'],
-  [i18n('options_general_filenamePattern_token_tweetId'), '{tweetId}'],
-  [i18n('options_general_filenamePattern_token_hash'), '{hash}'],
-  [i18n('options_general_filenamePattern_token_serial'), '{serial}'],
-  [i18n('options_general_filenamePattern_token_downloadDate'), '{date}'],
-  [i18n('options_general_filenamePattern_token_tweetDate'), '{tweetDate}'],
-  [i18n('options_general_filenamePattern_token_tweetDatetime'), '{tweetDatetime}'],
-  // [i18n('options_general_filenamePattern_token_datetime'), '{datetime}'],
+const fp: [string, PatternToken][] = [
+  [i18n('options_general_filenamePattern_token_account'), PatternToken.Account],
+  [i18n('options_general_filenamePattern_token_accountId'), PatternToken.AccountId],
+  [i18n('options_general_filenamePattern_token_tweetId'), PatternToken.TweetId],
+  [i18n('options_general_filenamePattern_token_hash'), PatternToken.Hash],
+  [i18n('options_general_filenamePattern_token_serial'), PatternToken.Serial],
+  [i18n('options_general_filenamePattern_token_downloadDate'), PatternToken.Date],
+  [i18n('options_general_filenamePattern_token_tweetDate'), PatternToken.TweetDate],
+  [
+    i18n('options_general_filenamePattern_token_tweetDatetime'),
+    PatternToken.TweetDatetime,
+  ],
+  // [i18n('options_general_filenamePattern_token_datetime'), PatternToken.Datetime],
 ]
 
 const TokenPanel = memo(
@@ -86,7 +93,7 @@ const TokenPanel = memo(
 
         <Flex justifyContent={'flex-start'} gap={'2'} flexWrap={'wrap'}>
           {fp.map(([name, token]) => (
-            <PatternToken
+            <PatternTokenControl
               key={token}
               tokenName={name}
               isOn={pattern.includes(token)}

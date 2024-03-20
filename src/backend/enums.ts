@@ -1,4 +1,4 @@
-export enum PatternToken {
+export const enum PatternToken {
   Account = '{account}',
   AccountId = '{accountId}',
   TweetId = '{tweetId}',
@@ -6,8 +6,6 @@ export enum PatternToken {
   Hash = '{hash}',
   Date = '{date}',
   Datetime = '{datetime}',
-  Timestamp = '{timestamp}',
   TweetDate = '{tweetDate}',
   TweetDatetime = '{tweetDatetime}',
-  TweetTimestamp = '{tweetTimestamp}',
 }

@@ -27,7 +27,7 @@ const defaultV4FilenameSettings: V4FilenameSettings = {
   directory: DEFAULT_DIRECTORY,
   noSubDirectory: false,
   filenamePattern: [PatternToken.Account, PatternToken.TweetId, PatternToken.Serial],
-  groupBy: '{account}',
+  groupBy: PatternToken.Account,
   fileAggregation: false,
 }
 

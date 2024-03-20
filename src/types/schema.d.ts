@@ -1,4 +1,5 @@
 import type { CognitoIdentityCredentials } from '@aws-sdk/credential-provider-cognito-identity'
+import type { PatternToken } from '@backend/enums'
 import type { DBSchema } from 'idb'
 import type { Downloads } from 'webextension-polyfill'
 
@@ -72,22 +73,9 @@ interface FeatureSettings {
   keyboardShortcut: boolean
 }
 
-type FilenamePatternToken =
-  | '{account}'
-  | '{tweetId}'
-  | '{serial}'
-  | '{hash}'
-  | '{date}'
-  | '{datetime}'
-  | '{tweetDate}'
-  | '{tweetDatetime}'
-  | '{accountId}'
-// | '{timestamp}'
-// | '{tweet-timestamp}'
+type V4FilenamePattern = PatternToken[]
 
-type V4FilenamePattern = FilenamePatternToken[]
-
-type AggregationToken = '{account}'
+type AggregationToken = PatternToken.Account
 
 interface V4FilenameSettings {
   directory: string

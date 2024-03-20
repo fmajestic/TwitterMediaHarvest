@@ -6,6 +6,7 @@ import {
   twitterApiSettingsRepo,
   v4FilenameSettingsRepo,
 } from '../configurations'
+import { PatternToken } from '@backend/enums'
 import { V4StatsUseCase } from '@backend/statistics/useCases'
 import type { V4FilenamePattern, V4FilenameSettings } from '@schema'
 import Browser from 'webextension-polyfill'
@@ -78,17 +79,19 @@ export class MigrateStorageToV4
     console.info('Migrate sync')
     const v3Settings = await filenameSettingsRepo.getSettings()
     const filenamePattern: V4FilenamePattern = []
-    if (v3Settings.filename_pattern.account) filenamePattern.push('{account}')
-    filenamePattern.push('{tweetId}')
+    if (v3Settings.filename_pattern.account) filenamePattern.push(PatternToken.Account)
+    filenamePattern.push(PatternToken.TweetId)
     filenamePattern.push(
-      v3Settings.filename_pattern.serial === 'order' ? '{serial}' : '{hash}'
+      v3Settings.filename_pattern.serial === 'order'
+        ? PatternToken.Serial
+        : PatternToken.Hash
     )
 
     const v4Settings: V4FilenameSettings = {
       noSubDirectory: v3Settings.no_subdirectory,
       directory: v3Settings.directory,
       filenamePattern: filenamePattern,
-      groupBy: '{account}',
+      groupBy: PatternToken.Account,
       fileAggregation: false,
     }
 

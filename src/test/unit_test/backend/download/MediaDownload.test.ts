@@ -1,6 +1,7 @@
 import MediaDownloader from '@backend/downloads/MediaDownloader'
 import { DownloadRecord } from '@backend/downloads/models'
 import type { IDownloadRecordsRepository } from '@backend/downloads/repositories'
+import { PatternToken } from '@backend/enums'
 import { faker } from '@faker-js/faker'
 import type { DownloadSettings, FeatureSettings, V4FilenameSettings } from '@schema'
 
@@ -66,9 +67,9 @@ jest.mock('webextension-polyfill', () => {
 describe('MediaDownloader Unit Test', () => {
   const filenameSettings: V4FilenameSettings = {
     directory: 'dl',
-    filenamePattern: ['{account}', '{tweetId}', '{tweetId}'],
+    filenamePattern: [PatternToken.Account, PatternToken.TweetId, PatternToken.TweetId],
     noSubDirectory: true,
-    groupBy: '{account}',
+    groupBy: PatternToken.Account,
     fileAggregation: false,
   }
   const downloadSettings: DownloadSettings = {
