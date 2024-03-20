@@ -185,11 +185,13 @@ const GeneralOptions = () => {
           >
             <Select
               isDisabled={!filenameSettings.fileAggregation}
-              onChange={formHandler.aggregationToggle}
+              onChange={formHandler.handleAggregationTokenChange}
             >
-              <option value="{account}">
-                {i18n('options_general_filenamePattern_token_account')}
-              </option>
+              {fp.map(([name, token]) => (
+                <option key={token} value={token}>
+                  {name}
+                </option>
+              ))}
             </Select>
           </RichFeatureSwitch>
           <HStack>

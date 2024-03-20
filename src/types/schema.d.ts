@@ -75,7 +75,7 @@ interface FeatureSettings {
 
 type V4FilenamePattern = PatternToken[]
 
-type AggregationToken = PatternToken.Account
+type AggregationToken = PatternToken
 
 interface V4FilenameSettings {
   directory: string

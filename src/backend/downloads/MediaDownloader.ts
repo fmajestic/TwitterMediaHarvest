@@ -68,15 +68,16 @@ const buildFilePathMaker =
   (filenameUsecase: V4FilenameSettingsUsecase) =>
   (tweetDetail: TweetDetail) =>
   (mediaFile: ITweetMediaFileDetail) => {
-    const filename = filenameUsecase.makeFilename(tweetDetail, {
+    const fileInfo = {
       serial: mediaFile.order,
       hash: mediaFile.hashName,
       date: new Date(),
-    })
+    }
+    const filename = filenameUsecase.makeFilename(tweetDetail, fileInfo)
     const fileFullPath = filenameUsecase.makeFullPathWithFilenameAndExt(
       filename,
       mediaFile.ext,
-      filenameUsecase.makeAggregationDirectory(tweetDetail)
+      filenameUsecase.makeAggregationDirectory(tweetDetail, fileInfo)
     )
     return fileFullPath
   }

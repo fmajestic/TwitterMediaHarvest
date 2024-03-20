@@ -81,7 +81,7 @@ describe('Filename usecase unit test', () => {
       groupBy: PatternToken.Account,
     }
     const useCase = new V4FilenameSettingsUsecase(s)
-    const aggregationDir = useCase.makeAggregationDirectory(tweetDetail)
+    const aggregationDir = useCase.makeAggregationDirectory(tweetDetail, fileInfo)
     expect(aggregationDir).toBe(tweetDetail.screenName)
   })
 })

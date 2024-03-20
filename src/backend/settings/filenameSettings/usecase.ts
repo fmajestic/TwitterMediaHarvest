@@ -23,33 +23,31 @@ const makeDateString = (date: Date): string =>
   String(date.getMonth() + 1).padStart(2, '0') +
   String(date.getDate()).padStart(2, '0')
 
+const patternFormatters = {
+  [PatternToken.Account]: (t, _) => t.screenName,
+  [PatternToken.TweetId]: (t, _) => t.id,
+  [PatternToken.Serial]: (_, f) => String(f.serial).padStart(2, '0'),
+  [PatternToken.Hash]: (_, f) => f.hash,
+  [PatternToken.Date]: (_, f) => makeDateString(f.date),
+  [PatternToken.Datetime]: (_, f) => makeDatetimeString(f.date),
+  [PatternToken.TweetDate]: (t, _) => makeDateString(t.createdAt),
+  [PatternToken.TweetDatetime]: (t, _) => makeDatetimeString(t.createdAt),
+  [PatternToken.AccountId]: (t, _) => t.userId,
+} satisfies Record<PatternToken, (t: TweetDetail, f: FileInfo) => string>
+
 export default class V4FilenameSettingsUsecase {
   constructor(readonly settings: V4FilenameSettings) {}
 
-  makeFilename(tweetDetail: TweetDetail, { serial, hash, date }: FileInfo): string {
-    const filename = this.settings.filenamePattern
-      .join('-')
-      .replace(PatternToken.Account, tweetDetail.screenName)
-      .replace(PatternToken.TweetId, tweetDetail.id)
-      .replace(PatternToken.Serial, String(serial).padStart(2, '0'))
-      .replace(PatternToken.Hash, hash)
-      .replace(PatternToken.Date, makeDateString(date))
-      .replace(PatternToken.Datetime, makeDatetimeString(date))
-      .replace(PatternToken.TweetDate, makeDateString(tweetDetail.createdAt))
-      .replace(PatternToken.TweetDatetime, makeDatetimeString(tweetDetail.createdAt))
-      .replace(PatternToken.AccountId, tweetDetail.userId)
-
+  makeFilename(tweetDetail: TweetDetail, fileInfo: FileInfo): string {
+    let filename = this.settings.filenamePattern.join('-')
+    for (const [pattern, format] of Object.entries(patternFormatters)) {
+      filename = filename.replace(pattern, format(tweetDetail, fileInfo))
+    }
     return filename
   }
 
-  makeAggregationDirectory(tweetDetail: TweetDetail): string {
-    switch (this.settings.groupBy) {
-      case '{account}':
-        return tweetDetail.screenName
-
-      default:
-        return tweetDetail.screenName
-    }
+  makeAggregationDirectory(tweetDetail: TweetDetail, fileInfo: FileInfo): string {
+    return patternFormatters[this.settings.groupBy](tweetDetail, fileInfo)
   }
 
   makeFullPathWithFilenameAndExt(
